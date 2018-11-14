@@ -254,3 +254,467 @@ class JMultiplyOp extends JBinaryExpression {
     }
 
 }
+
+/**
+ * The AST node for a dividicative (/) expression.
+ */
+
+class JDivideOp extends JBinaryExpression {
+
+    /**
+     * Construct an AST for a dividicative expression given its line number,
+     * and the lhs and rhs operands.
+     * 
+     * @param line
+     *            line in which the divide expression occurs in the
+     *            source file.
+     * @param lhs
+     *            the lhs operand.
+     * @param rhs
+     *            the rhs operand.
+     */
+
+    public JDivideOp(int line, JExpression lhs, JExpression rhs) {
+        super(line, "/", lhs, rhs);
+    }
+
+    /**
+     * Analyzing the / operation involves analyzing its operands, checking
+     * types, and determining the result type.
+     * 
+     * @param context
+     *            context in which names are resolved.
+     * @return the analyzed (and possibly rewritten) AST subtree.
+     */
+
+    public JExpression analyze(Context context) {
+        lhs = (JExpression) lhs.analyze(context);
+        rhs = (JExpression) rhs.analyze(context);
+        lhs.type().mustMatchExpected(line(), Type.INT);
+        rhs.type().mustMatchExpected(line(), Type.INT);
+        type = Type.INT;
+        return this;
+    }
+
+    /**
+     * Generating code for the / operation involves generating code for the two
+     * operands, and then the divide instruction.
+     * 
+     * @param output
+     *            the code emitter (basically an abstraction for producing the
+     *            .class file).
+     */
+
+    public void codegen(CLEmitter output) {
+        lhs.codegen(output);
+        rhs.codegen(output);
+        output.addNoArgInstruction(IDIV);
+    }
+
+}
+
+/**
+ * The AST node for a modulative (%) expression.
+ */
+
+class JModOp extends JBinaryExpression {
+
+    /**
+     * Construct an AST for a modulative expression given its line number,
+     * and the lhs and rhs operands.
+     * 
+     * @param line
+     *            line in which the modulus expression occurs in the
+     *            source file.
+     * @param lhs
+     *            the lhs operand.
+     * @param rhs
+     *            the rhs operand.
+     */
+
+    public JModOp(int line, JExpression lhs, JExpression rhs) {
+        super(line, "%", lhs, rhs);
+    }
+
+    /**
+     * Analyzing the % operation involves analyzing its operands, checking
+     * types, and determining the result type.
+     * 
+     * @param context
+     *            context in which names are resolved.
+     * @return the analyzed (and possibly rewritten) AST subtree.
+     */
+
+    public JExpression analyze(Context context) {
+        lhs = (JExpression) lhs.analyze(context);
+        rhs = (JExpression) rhs.analyze(context);
+        lhs.type().mustMatchExpected(line(), Type.INT);
+        rhs.type().mustMatchExpected(line(), Type.INT);
+        type = Type.INT;
+        return this;
+    }
+
+    /**
+     * Generating code for the % operation involves generating code for the two
+     * operands, and then the divide instruction.
+     * 
+     * @param output
+     *            the code emitter (basically an abstraction for producing the
+     *            .class file).
+     */
+
+    public void codegen(CLEmitter output) {
+        lhs.codegen(output);
+        rhs.codegen(output);
+        output.addNoArgInstruction(IREM);
+    }
+
+}
+
+/**
+ * The AST node for a bitwise left shiftative (<<) expression.
+ */
+
+class JBWLShiftOp extends JBinaryExpression {
+
+    /**
+     * Construct an AST for a bitwise left shiftative expression given its line number,
+     * and the lhs and rhs operands.
+     * 
+     * @param line
+     *            line in which the right expression occurs in the
+     *            source file.
+     * @param lhs
+     *            the lhs operand.
+     * @param rhs
+     *            the rhs operand.
+     */
+
+    public JBWLShiftOp(int line, JExpression lhs, JExpression rhs) {
+        super(line, "<<", lhs, rhs);
+    }
+
+    /**
+     * Analyzing the << operation involves analyzing its operands, checking
+     * types, and determining the result type.
+     * 
+     * @param context
+     *            context in which names are resolved.
+     * @return the analyzed (and possibly rewritten) AST subtree.
+     */
+
+    public JExpression analyze(Context context) {
+        lhs = (JExpression) lhs.analyze(context);
+        rhs = (JExpression) rhs.analyze(context);
+        lhs.type().mustMatchExpected(line(), Type.INT);
+        rhs.type().mustMatchExpected(line(), Type.INT);
+        type = Type.INT;
+        return this;
+    }
+
+    /**
+     * Generating code for the << operation involves generating code for the two
+     * operands, and then the divide instruction.
+     * 
+     * @param output
+     *            the code emitter (basically an abstraction for producing the
+     *            .class file).
+     */
+
+    public void codegen(CLEmitter output) {
+        lhs.codegen(output);
+        rhs.codegen(output);
+        output.addNoArgInstruction(ISHL);
+    }
+
+}
+
+/**
+ * The AST node for a bitwise right shiftative (>>) expression.
+ */
+
+class JBWRShiftOp extends JBinaryExpression {
+
+    /**
+     * Construct an AST for a bitwise right shiftative expression given its line number,
+     * and the lhs and rhs operands.
+     * 
+     * @param line
+     *            line in which the bitwise right shift expression occurs in the
+     *            source file.
+     * @param lhs
+     *            the lhs operand.
+     * @param rhs
+     *            the rhs operand.
+     */
+
+    public JBWRShiftOp(int line, JExpression lhs, JExpression rhs) {
+        super(line, ">>", lhs, rhs);
+    }
+
+    /**
+     * Analyzing the >> operation involves analyzing its operands, checking
+     * types, and determining the result type.
+     * 
+     * @param context
+     *            context in which names are resolved.
+     * @return the analyzed (and possibly rewritten) AST subtree.
+     */
+
+    public JExpression analyze(Context context) {
+        lhs = (JExpression) lhs.analyze(context);
+        rhs = (JExpression) rhs.analyze(context);
+        lhs.type().mustMatchExpected(line(), Type.INT);
+        rhs.type().mustMatchExpected(line(), Type.INT);
+        type = Type.INT;
+        return this;
+    }
+
+    /**
+     * Generating code for the >> operation involves generating code for the two
+     * operands, and then the divide instruction.
+     * 
+     * @param output
+     *            the code emitter (basically an abstraction for producing the
+     *            .class file).
+     */
+
+    public void codegen(CLEmitter output) {
+        lhs.codegen(output);
+        rhs.codegen(output);
+        output.addNoArgInstruction(ISHR);
+    }
+
+}
+
+/**
+ * The AST node for a bitwise right zero fill shiftative (>>) expression.
+ */
+
+class JBWRShiftZeroFillOp extends JBinaryExpression {
+
+    /**
+     * Construct an AST for a bitwise right zero fill shiftative expression given its line number,
+     * and the lhs and rhs operands.
+     * 
+     * @param line
+     *            line in which the bitwise right shift expression occurs in the
+     *            source file.
+     * @param lhs
+     *            the lhs operand.
+     * @param rhs
+     *            the rhs operand.
+     */
+
+    public JBWRShiftZeroFillOp(int line, JExpression lhs, JExpression rhs) {
+        super(line, ">>>", lhs, rhs);
+    }
+
+    /**
+     * Analyzing the >> operation involves analyzing its operands, checking
+     * types, and determining the result type.
+     * 
+     * @param context
+     *            context in which names are resolved.
+     * @return the analyzed (and possibly rewritten) AST subtree.
+     */
+
+    public JExpression analyze(Context context) {
+        lhs = (JExpression) lhs.analyze(context);
+        rhs = (JExpression) rhs.analyze(context);
+        lhs.type().mustMatchExpected(line(), Type.INT);
+        rhs.type().mustMatchExpected(line(), Type.INT);
+        type = Type.INT;
+        return this;
+    }
+
+    /**
+     * Generating code for the >>> operation involves generating code for the two
+     * operands, and then the divide instruction.
+     * 
+     * @param output
+     *            the code emitter (basically an abstraction for producing the
+     *            .class file).
+     */
+
+    public void codegen(CLEmitter output) {
+        lhs.codegen(output);
+        rhs.codegen(output);
+        output.addNoArgInstruction(ISHR); // Todo: this is wrong for zero fill
+    }
+
+}
+
+/**
+ * The AST node for a bitwise ANDitive (&) expression.
+ */
+
+class JBWAndOp extends JBinaryExpression {
+
+    /**
+     * Construct an AST for a bitwise AND expression given its line number,
+     * and the lhs and rhs operands.
+     * 
+     * @param line
+     *            line in which the bitwise AND expression occurs in the
+     *            source file.
+     * @param lhs
+     *            the lhs operand.
+     * @param rhs
+     *            the rhs operand.
+     */
+
+    public JBWAndOp(int line, JExpression lhs, JExpression rhs) {
+        super(line, "&", lhs, rhs);
+    }
+
+    /**
+     * Analyzing the & operation involves analyzing its operands, checking
+     * types, and determining the result type.
+     * 
+     * @param context
+     *            context in which names are resolved.
+     * @return the analyzed (and possibly rewritten) AST subtree.
+     */
+
+    public JExpression analyze(Context context) {
+        lhs = (JExpression) lhs.analyze(context);
+        rhs = (JExpression) rhs.analyze(context);
+        lhs.type().mustMatchExpected(line(), Type.INT);
+        rhs.type().mustMatchExpected(line(), Type.INT);
+        type = Type.INT;
+        return this;
+    }
+
+    /**
+     * Generating code for the & operation involves generating code for the two
+     * operands, and then the divide instruction.
+     * 
+     * @param output
+     *            the code emitter (basically an abstraction for producing the
+     *            .class file).
+     */
+
+    public void codegen(CLEmitter output) {
+        lhs.codegen(output);
+        rhs.codegen(output);
+        output.addNoArgInstruction(IAND);
+    }
+
+}
+
+/**
+ * The AST node for a bitwise ORitive (|) expression.
+ */
+
+class JBWOrOp extends JBinaryExpression {
+
+    /**
+     * Construct an AST for a bitwise OR expression given its line number,
+     * and the lhs and rhs operands.
+     * 
+     * @param line
+     *            line in which the bitwise OR expression occurs in the
+     *            source file.
+     * @param lhs
+     *            the lhs operand.
+     * @param rhs
+     *            the rhs operand.
+     */
+
+    public JBWOrOp(int line, JExpression lhs, JExpression rhs) {
+        super(line, "|", lhs, rhs);
+    }
+
+    /**
+     * Analyzing the | operation involves analyzing its operands, checking
+     * types, and determining the result type.
+     * 
+     * @param context
+     *            context in which names are resolved.
+     * @return the analyzed (and possibly rewritten) AST subtree.
+     */
+
+    public JExpression analyze(Context context) {
+        lhs = (JExpression) lhs.analyze(context);
+        rhs = (JExpression) rhs.analyze(context);
+        lhs.type().mustMatchExpected(line(), Type.INT);
+        rhs.type().mustMatchExpected(line(), Type.INT);
+        type = Type.INT;
+        return this;
+    }
+
+    /**
+     * Generating code for the | operation involves generating code for the two
+     * operands, and then the divide instruction.
+     * 
+     * @param output
+     *            the code emitter (basically an abstraction for producing the
+     *            .class file).
+     */
+
+    public void codegen(CLEmitter output) {
+        lhs.codegen(output);
+        rhs.codegen(output);
+        output.addNoArgInstruction(IOR);
+    }
+
+}
+
+/**
+ * The AST node for a bitwise XORitive (^) expression.
+ */
+
+class JBWXorOp extends JBinaryExpression {
+
+    /**
+     * Construct an AST for a bitwise XOR expression given its line number,
+     * and the lhs and rhs operands.
+     * 
+     * @param line
+     *            line in which the bitwise XOR expression occurs in the
+     *            source file.
+     * @param lhs
+     *            the lhs operand.
+     * @param rhs
+     *            the rhs operand.
+     */
+
+    public JBWXorOp(int line, JExpression lhs, JExpression rhs) {
+        super(line, "^", lhs, rhs);
+    }
+
+    /**
+     * Analyzing the ^ operation involves analyzing its operands, checking
+     * types, and determining the result type.
+     * 
+     * @param context
+     *            context in which names are resolved.
+     * @return the analyzed (and possibly rewritten) AST subtree.
+     */
+
+    public JExpression analyze(Context context) {
+        lhs = (JExpression) lhs.analyze(context);
+        rhs = (JExpression) rhs.analyze(context);
+        lhs.type().mustMatchExpected(line(), Type.INT);
+        rhs.type().mustMatchExpected(line(), Type.INT);
+        type = Type.INT;
+        return this;
+    }
+
+    /**
+     * Generating code for the ^ operation involves generating code for the two
+     * operands, and then the divide instruction.
+     * 
+     * @param output
+     *            the code emitter (basically an abstraction for producing the
+     *            .class file).
+     */
+
+    public void codegen(CLEmitter output) {
+        lhs.codegen(output);
+        rhs.codegen(output);
+        output.addNoArgInstruction(IXOR);
+    }
+
+}
