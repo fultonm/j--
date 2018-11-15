@@ -1,5 +1,7 @@
 // Copyright 2013 Bill Campbell, Swami Iyer and Bahar Akbal-Delibas
 
+package tests.junit;
+
 import junit.framework.TestCase;
 import jminusminus.Main;
 import java.io.File;

@@ -1,5 +1,7 @@
 // Copyright 2013 Bill Campbell, Swami Iyer and Bahar Akbal-Delibas
 
+package tests.junit;
+
 import junit.framework.TestCase;
 import jminusminus.Main;
 import java.io.File;
@@ -25,7 +27,8 @@ public class ParserTest extends TestCase {
      */
 
     public void testPass() {
-        File passTestsDir = new File(System.getProperty("PASS_TESTS_DIR"));
+        String property = System.getProperty("PASS_TESTS_DIR");
+        File passTestsDir = new File(property);
         File[] files = passTestsDir.listFiles();
         boolean errorHasOccurred = false;
         for (int i = 0; files != null && i < files.length; i++) {

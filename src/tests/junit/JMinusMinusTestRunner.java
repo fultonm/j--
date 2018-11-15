@@ -1,10 +1,14 @@
 // Copyright 2013 Bill Campbell, Swami Iyer and Bahar Akbal-Delibas
 
+
+package tests.junit;
+
 import java.io.File;
 import junit.framework.TestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import tests.pass.*;
+import tests.junit.*;
 
 /**
  * JUnit test suite for running the j-- programs in tests/pass.
