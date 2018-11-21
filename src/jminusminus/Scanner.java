@@ -11,7 +11,7 @@ import static jminusminus.TokenKind.*;
 
 /**
  * A lexical analyzer for j--, that has no backtracking mechanism.
- * 
+ *
  * When you add a new token to the scanner, you must also add an entry in the
  * TokenKind enum in TokenInfo.java specifying the kind and image of the new
  * token.
@@ -42,7 +42,7 @@ class Scanner {
 
 	/**
 	 * Construct a Scanner object.
-	 * 
+	 *
 	 * @param fileName the name of the file containing the source.
 	 * @exception FileNotFoundException when the named file cannot be found.
 	 */
@@ -114,7 +114,7 @@ class Scanner {
 
 	/**
 	 * Scan the next token from input.
-	 * 
+	 *
 	 * @return the the next scanned token.
 	 */
 
@@ -422,7 +422,7 @@ class Scanner {
 
 	/**
 	 * Scan and return an escaped character.
-	 * 
+	 *
 	 * @return escaped character.
 	 */
 
@@ -476,7 +476,7 @@ class Scanner {
 	 * Report a lexcial error and record the fact that an error has occured. This
 	 * fact can be ascertained from the Scanner by sending it an errorHasOccurred()
 	 * message.
-	 * 
+	 *
 	 * @param message message identifying the error.
 	 * @param args    related values.
 	 */
@@ -490,7 +490,7 @@ class Scanner {
 
 	/**
 	 * Return true if the specified character is a digit (0-9); false otherwise.
-	 * 
+	 *
 	 * @param c character.
 	 * @return true or false.
 	 */
@@ -501,7 +501,7 @@ class Scanner {
 
 	/**
 	 * Return true if the specified character is a whitespace; false otherwise.
-	 * 
+	 *
 	 * @param c character.
 	 * @return true or false.
 	 */
@@ -520,7 +520,7 @@ class Scanner {
 	/**
 	 * Return true if the specified character can start an identifier name; false
 	 * otherwise.
-	 * 
+	 *
 	 * @param c character.
 	 * @return true or false.
 	 */
@@ -532,7 +532,7 @@ class Scanner {
 	/**
 	 * Return true if the specified character can be part of an identifier name;
 	 * false otherwise.
-	 * 
+	 *
 	 * @param c character.
 	 * @return true or false.
 	 */
@@ -543,7 +543,7 @@ class Scanner {
 
 	/**
 	 * Has an error occurred up to now in lexical analysis?
-	 * 
+	 *
 	 * @return true or false.
 	 */
 
@@ -553,7 +553,7 @@ class Scanner {
 
 	/**
 	 * The name of the source file.
-	 * 
+	 *
 	 * @return name of the source file.
 	 */
 
@@ -582,7 +582,7 @@ class CharReader {
 
 	/**
 	 * Construct a CharReader from a file name.
-	 * 
+	 *
 	 * @param fileName the name of the input file.
 	 * @exception FileNotFoundException if the file is not found.
 	 */
@@ -594,7 +594,7 @@ class CharReader {
 
 	/**
 	 * Scan the next character.
-	 * 
+	 *
 	 * @return the character scanned.
 	 * @exception IOException if an I/O error occurs.
 	 */
@@ -605,7 +605,7 @@ class CharReader {
 
 	/**
 	 * The current line number in the source file, starting at 1.
-	 * 
+	 *
 	 * @return the current line number.
 	 */
 
@@ -616,7 +616,7 @@ class CharReader {
 
 	/**
 	 * Return the file name.
-	 * 
+	 *
 	 * @return the file name.
 	 */
 
@@ -626,7 +626,7 @@ class CharReader {
 
 	/**
 	 * Close the file.
-	 * 
+	 *
 	 * @exception IOException if an I/O error occurs.
 	 */
 

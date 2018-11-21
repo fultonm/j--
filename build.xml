@@ -151,7 +151,7 @@
     -->
     <target name="runCompilerTests" depends="compile,compileSPIM,jar">
         <echo message="Compiling and running j-- (JVM) programs..."/>
-        <javac srcdir="${basedir}/tests/"
+        <javac srcdir="${basedir}/src/tests/"
                destdir="${CLASS_DIR}"
                includes="junit/JMinusMinusTest.java"
 	       includeantruntime="false"
@@ -175,7 +175,7 @@
                 <formatter type="plain" usefile="false"/>
             </test>
         </junit>
-        <javac srcdir="${basedir}/tests"
+        <javac srcdir="${basedir}/src/tests"
                sourcepath=""
                destdir="${CLASS_DIR}"
                includes="junit/**"
@@ -209,7 +209,7 @@
 	    depends="javacc,compileJavaCC,compileSPIM,jar">
         <echo message=
             "Compiling and running j-- (JVM) programs using JavaCC frontend..."/>
-        <javac srcdir="${basedir}/tests/"
+        <javac srcdir="${basedir}/src/tests/"
                destdir="${CLASS_DIR}"
                includes="junit/JMinusMinusTestJavaCC.java"
 	       includeantruntime="false"
@@ -233,7 +233,7 @@
                 <formatter type="plain" usefile="false"/>
             </test>
         </junit>
-        <javac srcdir="${basedir}/tests"
+        <javac srcdir="${basedir}/src/tests"
                sourcepath=""
                destdir="${CLASS_DIR}"
                includes="junit/**"
@@ -265,7 +265,7 @@
     -->
     <target name="testScanner" depends="compile,jar">
         <echo message="Running handwritten scanner on the j-- programs..."/>
-        <javac srcdir="${basedir}/tests/"
+        <javac srcdir="${basedir}/src/tests/"
                destdir="${CLASS_DIR}"
                includes="junit/ScannerTest.java"
 	       includeantruntime="false"
@@ -295,7 +295,7 @@
     -->
     <target name="testJavaCCScanner" depends="javacc,compileJavaCC,jar">
         <echo message="Running JavaCC scanner on the j-- programs..."/>
-        <javac srcdir="${basedir}/tests/"
+        <javac srcdir="${basedir}/src/tests/"
                destdir="${CLASS_DIR}"
                includes="junit/JavaCCScannerTest.java"
 	       includeantruntime="false"
@@ -325,7 +325,7 @@
     -->
     <target name="testParser" depends="compile,jar">
         <echo message="Running handwritten parser on the j-- programs..."/>
-        <javac srcdir="${basedir}/tests/"
+        <javac srcdir="${basedir}/src/tests/"
                destdir="${CLASS_DIR}"
                includes="junit/ParserTest.java"
 	       includeantruntime="false"
@@ -355,7 +355,7 @@
     -->
     <target name="testJavaCCParser" depends="javacc,compileJavaCC,jar">
         <echo message="Running JavaCC parser on the j-- programs..."/>
-        <javac srcdir="${basedir}/tests/"
+        <javac srcdir="${basedir}/src/tests/"
                destdir="${CLASS_DIR}"
                includes="junit/JavaCCParserTest.java"
 	       includeantruntime="false"
@@ -385,7 +385,7 @@
     -->
     <target name="testPreAnalysis" depends="compile,jar">
         <echo message="Running compiler on j-- programs up to pre-analysis..."/>
-        <javac srcdir="${basedir}/tests/"
+        <javac srcdir="${basedir}/src/tests/"
                destdir="${CLASS_DIR}"
                includes="junit/PreAnalysisTest.java"
 	       includeantruntime="false"
@@ -415,7 +415,7 @@
     -->
     <target name="testAnalysis" depends="compile,jar">
         <echo message="Running compiler on j-- programs up to analysis..."/>
-        <javac srcdir="${basedir}/tests/"
+        <javac srcdir="${basedir}/src/tests/"
                destdir="${CLASS_DIR}"
                includes="junit/AnalysisTest.java"
 	       includeantruntime="false"
