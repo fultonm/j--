@@ -427,7 +427,7 @@ class JavaCCParser implements JavaCCParserConstants {
         }
                 memberDecl =
                    new JMethodDeclaration( line, mods, name,
-                                           type, params, body );
+                                           type, params, null, body );
       } else {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case BOOLEAN:

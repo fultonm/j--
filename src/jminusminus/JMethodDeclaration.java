@@ -24,6 +24,9 @@ class JMethodDeclaration
     /** The formal parameters. */
     protected ArrayList<JFormalParameter> params;
 
+    /** The name of the type of Exception this method can throw. */
+    protected String throwsName;
+
     /** Method body. */
     protected JBlock body;
 
@@ -64,7 +67,7 @@ class JMethodDeclaration
 
     public JMethodDeclaration(int line, ArrayList<String> mods,
         String name, Type returnType,
-        ArrayList<JFormalParameter> params, JBlock body)
+        ArrayList<JFormalParameter> params, String throwsName, JBlock body)
 
     {
         super(line);
@@ -72,6 +75,7 @@ class JMethodDeclaration
         this.name = name;
         this.returnType = returnType;
         this.params = params;
+        this.throwsName = throwsName;
         this.body = body;
         this.isAbstract = mods.contains("abstract");
         this.isStatic = mods.contains("static");

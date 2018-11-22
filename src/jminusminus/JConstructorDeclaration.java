@@ -40,7 +40,7 @@ class JConstructorDeclaration extends JMethodDeclaration implements JMember {
             String name, ArrayList<JFormalParameter> params, JBlock body)
 
     {
-        super(line, mods, name, Type.CONSTRUCTOR, params, body);
+        super(line, mods, name, Type.CONSTRUCTOR, params, null, body);
     }
 
     /**

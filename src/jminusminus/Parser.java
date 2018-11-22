@@ -558,7 +558,7 @@ public class Parser {
                 String name = scanner.previousToken().image();
                 ArrayList<JFormalParameter> params = formalParameters();
                 JBlock body = have(SEMI) ? null : block();
-                memberDecl = new JMethodDeclaration(line, mods, name, type, params, body);
+                memberDecl = new JMethodDeclaration(line, mods, name, type, params, null, body);
             } else {
                 type = type();
                 if (seeIdentLParen()) {
@@ -566,8 +566,14 @@ public class Parser {
                     mustBe(IDENTIFIER);
                     String name = scanner.previousToken().image();
                     ArrayList<JFormalParameter> params = formalParameters();
+                    // TODO: Could have multiple throws exceptions
+                    String throwsName = null;
+                    if (have(THROWS)) {
+                        mustBe(IDENTIFIER);
+                        throwsName = scanner.previousToken().image();
+                    }
                     JBlock body = have(SEMI) ? null : block();
-                    memberDecl = new JMethodDeclaration(line, mods, name, type, params, body);
+                    memberDecl = new JMethodDeclaration(line, mods, name, type, params, throwsName, body);
                 } else {
                     // Field
                     memberDecl = new JFieldDeclaration(line, mods, variableDeclarators(type));
@@ -681,6 +687,9 @@ public class Parser {
             return new JTryStatement(line, tryBlock, catchBlock, null);
 
         } else if (have(THROW)) {
+            mustBe(IDENTIFIER);
+            String exceptionName = scanner.previousToken().image();
+            return new JExceptionStatement(line, exceptionName);
 
         } else { // Must be a statementExpression
             JStatement statement = statementExpression();
