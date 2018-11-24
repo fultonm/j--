@@ -196,8 +196,17 @@ class JClassDeclaration extends JAST implements JTypeDecl {
      */
 
     public JAST analyze(Context context) {
+        boolean publicClassDelclarationFound = false;
         // Analyze all members
         for (JMember member : classBlock) {
+            if (member instanceof JClassDeclaration) {
+                JClassDeclaration classDecl = (JClassDeclaration)member;
+                if (!publicClassDelclarationFound && classDecl.mods.contains("public")) {
+                    publicClassDelclarationFound = true;
+                } else if (classDecl.mods.contains("public")) {
+                    JAST.compilationUnit.reportSemanticError(line, "Only one class declaration in j-- may be declared public.");
+                }
+            }
             ((JAST) member).analyze(this.context);
         }
 
