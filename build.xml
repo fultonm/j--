@@ -88,10 +88,15 @@
        jar: Bundles the jminusminus classes and SPIM runtime  
        classes into respective jar files.
     -->
-    
+
     <target name="jar">
         <echo message="Bundling class files into jar files..."/>
-        <jar destfile="${LIB_DIR}/j--.jar" basedir="${CLASS_DIR}" includes="jminusminus/**"/>
+        <jar destfile="${LIB_DIR}/j--.jar" basedir="${CLASS_DIR}" includes="jminusminus/**">
+            <fileset dir="classes"/>
+            <manifest>
+                <attribute name="Main-Class" value="jminusminus.Main"/>
+            </manifest>
+        </jar>
         <jar destfile="${LIB_DIR}/spim.jar" basedir="${CLASS_DIR}" includes="spim/**"/>
     </target>
 
