@@ -45,7 +45,7 @@ class JStatementExpression extends JStatement {
 
     /**
      * Generating code for the statement expression involves simply generating
-     * code for the encapsulated expression.
+     *      * code for the encapsulated expression.
      * 
      * @param output
      *            the code emitter (basically an abstraction for producing the

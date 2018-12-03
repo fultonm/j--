@@ -3,6 +3,7 @@
 package jminusminus;
 
 import static jminusminus.CLConstants.GOTO;
+import static jminusminus.CLConstants.POP;
 
 /**
  * The AST node for a while-statement.
@@ -16,8 +17,8 @@ class JForStatement extends JStatement {
     /** Test expression. */
     private JExpression condition;
 
-    /** Post-body expression */
-    private JExpression postBodyExpression;
+    /** Post-body statement */
+    private JExpression incrementerExpr;
 
     /** The body. */
     private JStatement body;
@@ -34,11 +35,11 @@ class JForStatement extends JStatement {
      *            the body.
      */
 
-    public JForStatement(int line, JStatement initStatement, JExpression condition, JExpression postBodyExpression, JStatement body) {
+    public JForStatement(int line, JStatement initStatement, JExpression condition, JExpression incrementerExpr, JStatement body) {
         super(line);
         this.initStatement = initStatement;
         this.condition = condition;
-        this.postBodyExpression = postBodyExpression;
+        this.incrementerExpr = incrementerExpr;
         this.body = body;
     }
 
@@ -50,10 +51,11 @@ class JForStatement extends JStatement {
      *            context in which names are resolved.
      * @return the analyzed (and possibly rewritten) AST subtree.
      */
-//TODO: This is just the JWhileStatement analyze
     public JForStatement analyze(Context context) {
+        initStatement = (JStatement) initStatement.analyze(context);
         condition = condition.analyze(context);
         condition.type().mustMatchExpected(line(), Type.BOOLEAN);
+        incrementerExpr = incrementerExpr.analyze(context);
         body = (JStatement) body.analyze(context);
         return this;
     }
@@ -65,25 +67,34 @@ class JForStatement extends JStatement {
      *            the code emitter (basically an abstraction for producing the
      *            .class file).
      */
-// TODO: This is just the JWhileStatement codegen
     public void codegen(CLEmitter output) {
-        // Need two labels
-        String test = output.createLabel();
-        String out = output.createLabel();
 
-        // Branch out of the loop on the test condition
-        // being false
-        output.addLabel(test);
-        condition.codegen(output, out, false);
+        // Need a label before the body
+        String bodyLabel = output.createLabel();
+        String exitLabel = output.createLabel();
 
-        // Codegen body
+        // Init the variable we'll be using
+        initStatement.codegen(output);
+        // Check the condition, if its already false then exit without entering body
+        condition.codegen(output, exitLabel, false);
+
+        // Put the label before generating body code.
+        output.addLabel(bodyLabel);
+
+        // Do the body of the loop
         body.codegen(output);
 
-        // Unconditional jump back up to test
-        output.addBranchInstruction(GOTO, test);
 
-        // The label below and outside the loop
-        output.addLabel(out);
+        // Increment/decrement the counter
+        incrementerExpr.codegen(output);
+        // Discard the value off the stack to avoid "inconsistent stack height"!
+        output.addNoArgInstruction(POP);
+
+        // If the condition is true jump back to body
+        // else we're done.
+        condition.codegen(output, bodyLabel, true);
+
+        output.addLabel(exitLabel);
     }
 
     /**

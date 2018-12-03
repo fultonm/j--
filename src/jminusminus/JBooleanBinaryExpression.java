@@ -266,14 +266,11 @@ class JLogicalOrOp extends JBooleanBinaryExpression {
     /**
      * Construct an AST node for a logical OR expression given its line number,
      * and lhs and rhs operands.
-     * 
-     * @param line
-     *            line in which the logical AND expression occurs in the source
-     *            file.
-     * @param lhs
-     *            lhs operand.
-     * @param rhs
-     *            rhs operand.
+     *
+     * @param line line in which the logical AND expression occurs in the source
+     *             file.
+     * @param lhs  lhs operand.
+     * @param rhs  rhs operand.
      */
 
     public JLogicalOrOp(int line, JExpression lhs, JExpression rhs) {
@@ -283,9 +280,8 @@ class JLogicalOrOp extends JBooleanBinaryExpression {
     /**
      * Analyzing a logical OR expression involves analyzing its operands and
      * insuring they are boolean; the result type is of course boolean.
-     * 
-     * @param context
-     *            context in which names are resolved.
+     *
+     * @param context context in which names are resolved.
      * @return the analyzed (and possibly rewritten) AST subtree.
      */
 
@@ -301,26 +297,25 @@ class JLogicalOrOp extends JBooleanBinaryExpression {
     /**
      * The semantics of j-- require that we implement short-circuiting branching
      * in implementing the logical OR.
-     * 
-     * @param output
-     *            the code emitter (basically an abstraction for producing the
-     *            .class file).
-     * @param targetLabel
-     *            target for generated branch instruction.
-     * @param onTrue
-     *            should we branch on true?
+     *
+     * @param output      the code emitter (basically an abstraction for producing the
+     *                    .class file).
+     * @param targetLabel target for generated branch instruction.
+     * @param onTrue      should we branch on true?
      */
 
     public void codegen(CLEmitter output, String targetLabel, boolean onTrue) {
+
         if (onTrue) {
-            String falseLabel = output.createLabel();
-            lhs.codegen(output, falseLabel, false);
+            // If either of these are true then the OR expression is true
+            lhs.codegen(output, targetLabel, true);
             rhs.codegen(output, targetLabel, true);
-            output.addLabel(falseLabel);
         } else {
-            lhs.codegen(output, targetLabel, false);
+            String exitLabel = output.createLabel();
+            // If either of these are TRUE, then OR expression fails to be true, and we should exit
+            lhs.codegen(output, exitLabel, true); // If this one is true, don't evaluate the next
             rhs.codegen(output, targetLabel, false);
+            output.addLabel(exitLabel);
         }
     }
-
 }

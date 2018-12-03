@@ -1,5 +1,8 @@
 package jminusminus;
 
+import static jminusminus.CLConstants.GOTO;
+import static jminusminus.CLConstants.POP;
+
 /**
  * The AST node for a plus (+) expression. In j--, as in Java, + is overloaded
  * to denote addition for numbers and concatenation for Strings.
@@ -9,8 +12,8 @@ class JTernaryExpression extends JExpression {
 
     JExpression lhs;
     JExpression conditionExpr;
-    JExpression trueExpr;
-    JExpression falseExpr;
+    JExpression consequentExpr;
+    JExpression alternativeExpr;
 
     /**
      * Construct an AST node for an addition expression given its line number,
@@ -23,18 +26,18 @@ class JTernaryExpression extends JExpression {
      *            the lhs operand.
      * @param conditionExpression
      *            the condition to determine which expression is assigned to the lhs.
-     * @param trueExpression
+     * @param consequentExpr
      *            if the condition is true, this value is evaluated and is assigned to the lhs
-     * @param falseExpression
+     * @param alternativeExpr
      *            if the condition if false, then this value is evaluated and is assigned to the rhs
      */
 
-    public JTernaryExpression(int line, JExpression lhs, JExpression conditionExpression, JExpression trueExpression, JExpression falseExpression) {
+    public JTernaryExpression(int line, JExpression lhs, JExpression conditionExpression, JExpression consequentExpr, JExpression alternativeExpr) {
         super(line);
         this.lhs = lhs;
         this.conditionExpr = conditionExpression;
-        this.trueExpr = trueExpression;
-        this.falseExpr = falseExpression;
+        this.consequentExpr = consequentExpr;
+        this.alternativeExpr = alternativeExpr;
     }
 
     /**
@@ -49,18 +52,20 @@ class JTernaryExpression extends JExpression {
      */
 
     public JExpression analyze(Context context) {
-        lhs = (JExpression) lhs.analyze(context);
-        trueExpr = (JExpression) trueExpr.analyze(context);
-        falseExpr = (JExpression) falseExpr.analyze(context);
-        if (lhs.type() == Type.STRING || trueExpr.type() == Type.STRING || falseExpr.type() == Type.STRING) {
-            return (new JStringConcatenationOp(line, lhs, trueExpr))
-                    .analyze(context);
-        } else if (lhs.type() == Type.INT && trueExpr.type() == Type.INT && falseExpr.type() == Type.INT) {
+        conditionExpr = (JExpression) conditionExpr.analyze(context);
+        consequentExpr = (JExpression) consequentExpr.analyze(context);
+        alternativeExpr = (JExpression) alternativeExpr.analyze(context);
+        if (conditionExpr.type() != Type.BOOLEAN) {
+            JAST.compilationUnit.reportSemanticError(line(), "Ternary condition must be boolean");
+        }
+        if (consequentExpr.type() == Type.INT && alternativeExpr.type() == Type.INT) {
             type = Type.INT;
+        } else if (consequentExpr.type() == Type.STRING && alternativeExpr.type() == Type.STRING) {
+            type = Type.STRING;
         } else {
             type = Type.ANY;
             JAST.compilationUnit.reportSemanticError(line(),
-                    "Invalid operand types for +");
+                    "Invalid operand types for ternary. Consequent alternative and destination variable Types must match");
         }
         return this;
     }
@@ -77,7 +82,22 @@ class JTernaryExpression extends JExpression {
      */
 
     public void codegen(CLEmitter output) {
-       return;
+
+        String alternativeExprLabel = output.createLabel();
+        String endLabel = output.createLabel();
+
+        // Evaluate the condition, if FALSE, jump to alternative expression
+        conditionExpr.codegen(output, alternativeExprLabel,false);
+
+        // If the condition was true we will do the consequent
+        consequentExpr.codegen(output);
+        output.addBranchInstruction(GOTO, endLabel);
+
+        // Otherwise do the alternative
+        output.addLabel(alternativeExprLabel);
+        alternativeExpr.codegen(output);
+
+        output.addLabel(endLabel);
     }
 
     /** TODO: make this a complete std out for JTernaryExpression */
@@ -92,7 +112,7 @@ class JTernaryExpression extends JExpression {
         p.printf("</Lhs>\n");
         p.printf("<TrueExpr>\n");
         p.indentRight();
-        trueExpr.writeToStdOut(p);
+        consequentExpr.writeToStdOut(p);
         p.indentLeft();
         p.printf("</Rhs>\n");
         p.indentLeft();

@@ -106,7 +106,7 @@ public class Parser {
             isRecovered = true;
         } else if (isRecovered) {
             isRecovered = false;
-            reportParserError("%s found where %s sought", scanner.token().image(), sought.image());
+            reportParserError(",(mustBe) %s found where %s sought", scanner.token().image(), sought.image());
         } else {
             // Do not report the (possibly spurious) error,
             // but rather attempt to recover by forcing a match.
@@ -670,11 +670,12 @@ public class Parser {
         } else if (have(FOR)) {
             mustBe(LPAREN);
             JStatement initStatement = localVariableDeclarationStatement();
-            /** TODO: This condition has to be any expression starting from equality expression */
-            JExpression condition = equalityExpression();
-            JExpression postBodyExpression = expression();
-            JBlock body = block();
-            return new JForStatement(line, initStatement, condition, postBodyExpression, body);
+            JExpression condition = expression();
+            mustBe(SEMI);
+            JExpression postBodyExpr = expression();
+            mustBe(RPAREN);
+            JStatement statement = statement();
+            return new JForStatement(line, initStatement, condition, postBodyExpr, statement);
         } else if (have(SWITCH)) {
             JExpression condition = parExpression();
             /** TODO: Need labels for each switch case, so we can GOTO each one... this block is meaningless without further processing */
@@ -1031,27 +1032,27 @@ public class Parser {
         int line = scanner.token().line();
         JExpression lhs = ternaryExpression();
         if (have(ASSIGN)) {
-            return new JAssignOp(line, lhs, assignmentExpression());
+            return new JAssignOp(line, lhs, ternaryExpression());
         } else if (have(PLUS_ASSIGN)) {
-            return new JPlusAssignOp(line, lhs, assignmentExpression());
+            return new JPlusAssignOp(line, lhs, ternaryExpression());
         } else if (have(MINUS_ASSIGN)) {
-            return new JMinusAssignOp(line, lhs, assignmentExpression());
+            return new JMinusAssignOp(line, lhs, ternaryExpression());
         } else if (have(MULT_ASSIGN)) {
-            return new JMultAssignOp(line, lhs, assignmentExpression());
+            return new JMultAssignOp(line, lhs, ternaryExpression());
         } else if (have(DIV_ASSIGN)) {
-            return new JDivAssignOp(line, lhs, assignmentExpression());
+            return new JDivAssignOp(line, lhs, ternaryExpression());
         } else if (have(MOD_ASSIGN)) {
-            return new JModAssignOp(line, lhs, assignmentExpression());
+            return new JModAssignOp(line, lhs, ternaryExpression());
         } else if (have(BWLSHIFT_ASSIGN)) {
-            return new JBWLShiftAssignOp(line, lhs, assignmentExpression());
+            return new JBWLShiftAssignOp(line, lhs, ternaryExpression());
         } else if (have(BWRSHIFT_ASSIGN)) {
-            return new JBWRShiftAssignOp(line, lhs, assignmentExpression());
+            return new JBWRShiftAssignOp(line, lhs, ternaryExpression());
         } else if (have(BWAND_ASSIGN)) {
-            return new JBWAndAssignOp(line, lhs, assignmentExpression());
+            return new JBWAndAssignOp(line, lhs, ternaryExpression());
         } else if (have(BWXOR_ASSIGN)) {
-            return new JBWXorAssignOp(line, lhs, assignmentExpression());
+            return new JBWXorAssignOp(line, lhs, ternaryExpression());
         } else if (have(BWOR_ASSIGN)) {
-            return new JBWOrAssignOp(line, lhs, assignmentExpression());
+            return new JBWOrAssignOp(line, lhs, ternaryExpression());
         } else {
             return lhs;
         }
@@ -1073,10 +1074,11 @@ public class Parser {
         boolean more = true;
         JExpression lhs = conditionalOrExpression();
         while (more) {
-            if (have(TERNARY_TEST) && have(TERNARY_ELSE)) {
-                lhs = new JTernaryExpression(line, lhs, lhs, lhs, lhs);
-            } else if ((have(TERNARY_TEST) && !have(TERNARY_ELSE)) || (!have(TERNARY_TEST) && have(TERNARY_ELSE))) {
-                reportParserError("Invalid ternary expression");
+            if (have(TERNARY_TEST)) {
+                JExpression consequent = expression();
+                mustBe(TERNARY_ELSE);
+                JExpression alternative = expression();
+                return new JTernaryExpression(line, lhs, lhs, consequent, alternative);
             } else {
                 more = false;
             }
@@ -1102,7 +1104,7 @@ public class Parser {
         JExpression lhs = conditionalAndExpression();
         while (more) {
             if (have(LOR)) {
-                lhs = new JLogicalOrOp(line, lhs, equalityExpression());
+                lhs = new JLogicalOrOp(line, lhs, conditionalAndExpression());
             } else {
                 more = false;
             }
@@ -1627,20 +1629,21 @@ public class Parser {
             return new JLiteralNull(line);
         } else {
             reportParserError("Literal sought where %s found", scanner.token().image());
+
             return new JWildExpression(line);
         }
     }
 
-    // A tracing aid. Invoke to debug the parser at various
-    //
-    // private void trace( String message )
-    // {
-    // System.err.println( "["
-    // + scanner.token().line()
-    // + ": "
-    // + message
-    // + ", looking at a: "
-    // + scanner.token().tokenRep()
-    // + " = " + scanner.token().image() + "]" );
-    // }
+     //A tracing aid. Invoke to debug the parser at various
+
+     private void trace( String message )
+     {
+     System.err.println( "["
+     + scanner.token().line()
+     + ": "
+     + message
+     + ", looking at a: "
+     + scanner.token().tokenRep()
+     + " = " + scanner.token().image() + "]" );
+     }
 }
