@@ -8,7 +8,7 @@ BASE_DIR=`dirname $0`
 j=${BASE_DIR}/../
 export j
 JAVA=java
-CPATH="/Users/m/IdeaProjects/j--/out/production/j--"
+CPATH="${BASE_DIR}/../out/production/j--"
 if [ "$CLASSPATH" != "" ] ; then
     CPATH=${CPATH}:"${CLASSPATH}"
 fi

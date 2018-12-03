@@ -7,7 +7,7 @@ REM Wrapper script for running jminusminus.Main program.
 set BASE_DIR=%~dp0
 set j="%BASE_DIR%\..\"
 set JAVA=java
-set CPATH="%BASE_DIR%\..\lib\j--.jar;%BASE_DIR%\..\lib\spim.jar"
+set CPATH="%BASE_DIR%\..\out\production\j--;"
 if "%CLASSPATH%" == "" goto runApp
 set CPATH=%CPATH%;"%CLASSPATH%"
 
