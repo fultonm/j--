@@ -768,7 +768,7 @@ public class Parser {
     /**
      * Parse a local variable declaration statement.
      *
-     * <pre>
+     * <pre> 
      *   localVariableDeclarationStatement ::= type
      *                                           variableDeclarators
      *                                             SEMI
