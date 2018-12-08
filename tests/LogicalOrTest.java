@@ -1,6 +1,6 @@
 import java.lang.System;
 
-public class UnaryOperationTest {
+public class LogicalOrTest {
     public static void main(String[] args) {
         String a = true || false ? "it's true" : "it's false";
         System.out.println("Should be true: " + a);
